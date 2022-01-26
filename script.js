@@ -5,15 +5,17 @@ const display = document.getElementById("display");
 let displayText = ""; 
 
 let operators = ["+", "-", "*", "/", "AC"];
+let mappedOperators = ["add", "subtract", "multiply", "divide"];
+
 let operandsStack = []; 
 let operatorsStack = [];  
 
-let operations = [
-    (a, b) => a + b, 
-    (a, b) => a - b, 
-    (a, b) => a * b, 
-    (a, b) => a / b
-];
+let operations = {
+    add: (a, b) => a + b, 
+    subtract: (a, b) => a - b, 
+    multiply: (a, b) => a * b, 
+    divide: (a, b) => a / b
+};
 
 function makeCalculator() {
     makeBody(5, 3); 
@@ -33,12 +35,12 @@ function makeBody(rows, cols) {
         cell.innerText = content[numGrid-1]; 
 
         cell.addEventListener('click', () => {
-            operandsStack.push(cell.innerText); // does not support multiple digit operatoins
             if (cell.innerText == "=") {
                 equals(); 
             }
             else {
                 displayText += cell.innerText + " "; 
+                operandsStack.push(cell.innerText); // does not support multiple digit operations
             }
             display.innerText = displayText; 
         });
@@ -76,26 +78,27 @@ function clear() {
 }
 
 function equals() {
-    displayText = operate(); 
+    console.log('ok'); 
+    displayText = operate();
 }
 
 function operate() { // handles two numbers
-    console.log(operandsStack); 
-    let num1 = operandsStack.shift(); 
-    let num2 = operandsStack.shift(); 
-    let numOperator; 
-    let operation; 
 
-    let result = 0; 
-
-    console.log(operatorsStack); 
-
-    for (let operator of operatorsStack) {
-        console.log(operator);
-        operation = operations[operators.indexOf(operator)]; 
+    if (!operandsStack[0] || !operandsStack[1] || !operatorsStack) {
+        return displayText; 
     }
-    console.log(num1); 
-    return operation(num1, num2); 
+
+    let num1 = parseInt(operandsStack.shift()); 
+    let num2 = parseInt(operandsStack.shift()); 
+    let firstOperation = operatorsStack.shift(); 
+
+    let operation = mappedOperators[operators.indexOf(firstOperation)];
+    let result = operations[operation](num1, num2); 
+
+    operandsStack.unshift(result); 
+
+    return result; 
 }
+
 
 makeCalculator(); 
