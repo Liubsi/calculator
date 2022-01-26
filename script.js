@@ -4,7 +4,7 @@ const display = document.getElementById("display");
 
 let displayText = ""; 
 let consecDigits = false; 
-let consecOperations = false; 
+let resulted = false; 
 
 let operators = ["+", "-", "*", "/", "AC"];
 let mappedOperators = ["add", "subtract", "multiply", "divide"];
@@ -40,12 +40,20 @@ function makeBody(rows, cols) {
         cell.addEventListener('click', () => {
             if (cell.innerText == "=") {
                 consecDigits = false; 
+                resulted = true; 
+                // error checking 
                 if (digits.length != 0) {
                     operandsStack[operandsStack.length] = concatDigits("This shouldn't do anything"); 
                 }
-                equals(); 
+                if (!checkError()) {
+                    equals(); 
+                }
             }
             else {
+                // if number entered after result is calculated 
+                if (resulted) {
+                    clear(); 
+                }
                 consecDigits = true; 
                 concatDigits(cell.innerText); 
                 displayText += cell.innerText + ""; 
@@ -68,11 +76,13 @@ function makeOperators(rows, cols) { // includes clear (AC)
 
         cell.addEventListener('click', () => {
             consecDigits = false; 
+            resulted = false; 
 
             if (cell.innerText == "AC") {
                 clear(); 
             }
             else {
+                // error checking 
                 if (digits.length != 0) {
                     operandsStack.push(concatDigits("This shouldn't do anything")); 
                 }
@@ -99,11 +109,20 @@ function equals() {
     }
 }
 
-function determineOrder() {
-    
+function determineOrder() { // enforce order of operations
+    const order = [["/", "*"], ["+", "-"]];
+    let executionOrder = 0; 
 }
 
-function concatDigits(digit) {
+function checkError() {
+    if ((operandsStack.length - operatorsStack.length) != 1) {
+        console.log("Error"); 
+        return true; 
+    }
+    return false; 
+}
+
+function concatDigits(digit) { // concatenates digits 
     if (consecDigits) {
         digits.push(digit); 
     }
@@ -117,7 +136,7 @@ function concatDigits(digit) {
     }
 }
 
-function operate() { 
+function operate() { // handles two numbers at a time
 
     if (!operandsStack[0] || !operandsStack[1] || !operatorsStack[0]) {
         return displayText; 
