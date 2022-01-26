@@ -40,7 +40,9 @@ function makeBody(rows, cols) {
         cell.addEventListener('click', () => {
             if (cell.innerText == "=") {
                 consecDigits = false; 
-                operandsStack[operandsStack.length] = concatDigits("This shouldn't do anything"); 
+                if (digits.length != 0) {
+                    operandsStack[operandsStack.length] = concatDigits("This shouldn't do anything"); 
+                }
                 equals(); 
             }
             else {
@@ -49,6 +51,8 @@ function makeBody(rows, cols) {
                 displayText += cell.innerText + ""; 
             }
             display.innerText = displayText; 
+            console.log(operandsStack + " body"); 
+
         });
     }
 }
@@ -70,11 +74,14 @@ function makeOperators(rows, cols) { // includes clear (AC)
                 clear(); 
             }
             else {
-                operandsStack.push(concatDigits("This shouldn't do anything")); 
+                if (digits.length != 0) {
+                    operandsStack.push(concatDigits("This shouldn't do anything")); 
+                }
                 operatorsStack.push(cell.innerText); 
                 displayText += " " + cell.innerText + " "; 
             }
-            display.innerText = displayText;           
+            display.innerText = displayText;       
+            console.log(operandsStack);     
         });
     }
 }
@@ -89,10 +96,13 @@ function equals() {
     console.log(operandsStack);
     console.log(operatorsStack); 
 
-    let bobo = 0;
     while (operatorsStack.length > 0) {
         displayText = operate() + " "; 
     }
+}
+
+function determineOrder() {
+    
 }
 
 function concatDigits(digit) {
@@ -109,7 +119,7 @@ function concatDigits(digit) {
     }
 }
 
-function operate() { // handles two numbers MAX
+function operate() { 
 
     if (!operandsStack[0] || !operandsStack[1] || !operatorsStack[0]) {
         return displayText; 
@@ -123,7 +133,9 @@ function operate() { // handles two numbers MAX
     let result = operations[operation](num1, num2); 
 
     operandsStack.unshift(result); 
-    
+    console.log(operandsStack.length); 
+    console.log(operandsStack); 
+
     return result; 
 }
 
