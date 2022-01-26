@@ -1,6 +1,6 @@
 :root {
     --grid-cols: 1; 
-    --grid-row: 1; 
+    --grid-row: 1;
 }
 .body, #display {
     display: flex; 

@@ -3,14 +3,17 @@ const opContainer = document.getElementById("op-container");
 const display = document.getElementById("display"); 
 
 let displayText = ""; 
+let consecDigits = false; 
+let consecOperations = false; 
 
 let operators = ["+", "-", "*", "/", "AC"];
 let mappedOperators = ["add", "subtract", "multiply", "divide"];
 
 let operandsStack = []; 
 let operatorsStack = [];  
+let digits = []; 
 
-let operations = {
+const operations = {
     add: (a, b) => a + b, 
     subtract: (a, b) => a - b, 
     multiply: (a, b) => a * b, 
@@ -36,11 +39,14 @@ function makeBody(rows, cols) {
 
         cell.addEventListener('click', () => {
             if (cell.innerText == "=") {
+                consecDigits = false; 
+                operandsStack[1] = concatDigits("This shouldn't do anything"); 
                 equals(); 
             }
             else {
-                displayText += cell.innerText + " "; 
-                operandsStack.push(cell.innerText); // does not support multiple digit operations
+                consecDigits = true; 
+                concatDigits(cell.innerText); 
+                displayText += cell.innerText + ""; 
             }
             display.innerText = displayText; 
         });
@@ -58,13 +64,15 @@ function makeOperators(rows, cols) { // includes clear (AC)
         cell.innerText = operators[gridNum-1]; 
 
         cell.addEventListener('click', () => {
-            operatorsStack.push(cell.innerText); 
+            consecDigits = false; 
 
             if (cell.innerText == "AC") {
                 clear(); 
             }
             else {
-                displayText += cell.innerText + " "; 
+                operandsStack.push(concatDigits("This shouldn't do anything")); 
+                operatorsStack.push(cell.innerText); 
+                displayText += " " + cell.innerText + " "; 
             }
             display.innerText = displayText;           
         });
@@ -78,13 +86,28 @@ function clear() {
 }
 
 function equals() {
-    console.log('ok'); 
-    displayText = operate();
+    displayText = operate() + " ";
+    console.log(operandsStack); 
 }
 
-function operate() { // handles two numbers
+function concatDigits(digit) {
+    if (consecDigits) {
+        digits.push(digit); 
+    }
+    else {
+        let bigNumber = ""; 
+        for (let i = 0; i < digits.length; i++) {
+            bigNumber += digits[i]; 
+        }
+        digits = []; 
 
-    if (!operandsStack[0] || !operandsStack[1] || !operatorsStack) {
+        return bigNumber; 
+    }
+}
+
+function operate() { // handles two numbers MAX
+
+    if (!operandsStack[0] || !operandsStack[1] || !operatorsStack[0]) {
         return displayText; 
     }
 
