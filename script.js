@@ -86,15 +86,13 @@ function clear() {
 }
 
 function equals() {
-    let bobo = 0;
-    while (operatorsStack.length > 1 || bobo < 10) {
-        displayText = operate() + " "; 
-        bobo++
-    }
-    
-    console.log("After");
     console.log(operandsStack);
     console.log(operatorsStack); 
+
+    let bobo = 0;
+    while (operatorsStack.length > 0) {
+        displayText = operate() + " "; 
+    }
 }
 
 function concatDigits(digit) {
@@ -122,7 +120,6 @@ function operate() { // handles two numbers MAX
     let firstOperation = operatorsStack.shift(); 
 
     let operation = mappedOperators[operators.indexOf(firstOperation)];
-    
     let result = operations[operation](num1, num2); 
 
     operandsStack.unshift(result); 
