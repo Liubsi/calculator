@@ -51,7 +51,6 @@ function makeBody(rows, cols) {
                 displayText += cell.innerText + ""; 
             }
             display.innerText = displayText; 
-            console.log(operandsStack + " body"); 
 
         });
     }
@@ -81,7 +80,6 @@ function makeOperators(rows, cols) { // includes clear (AC)
                 displayText += " " + cell.innerText + " "; 
             }
             display.innerText = displayText;       
-            console.log(operandsStack);     
         });
     }
 }
@@ -125,16 +123,14 @@ function operate() {
         return displayText; 
     }
 
-    let num1 = parseInt(operandsStack.shift()); 
-    let num2 = parseInt(operandsStack.shift()); 
+    let num1 = parseFloat(operandsStack.shift()); 
+    let num2 = parseFloat(operandsStack.shift()); 
     let firstOperation = operatorsStack.shift(); 
 
     let operation = mappedOperators[operators.indexOf(firstOperation)];
     let result = operations[operation](num1, num2); 
 
     operandsStack.unshift(result); 
-    console.log(operandsStack.length); 
-    console.log(operandsStack); 
 
     return result; 
 }
