@@ -3,11 +3,10 @@ const opContainer = document.getElementById("op-container");
 const display = document.getElementById("display"); 
 
 let displayText = ""; 
-let result = 0; 
 
 let operators = ["+", "-", "*", "/", "AC"];
 let operandsStack = []; 
-let operatorsStack = []; 
+let operatorsStack = [];  
 
 let operations = [
     (a, b) => a + b, 
@@ -18,7 +17,7 @@ let operations = [
 
 function makeCalculator() {
     makeBody(5, 3); 
-    makeOperators(operators.length, 1);
+    makeOperators(operators.length, 1); 
 }
 
 function makeBody(rows, cols) { 
@@ -34,11 +33,9 @@ function makeBody(rows, cols) {
         cell.innerText = content[numGrid-1]; 
 
         cell.addEventListener('click', () => {
-            operandsStack.push(cell.innerText); 
-
+            operandsStack.push(cell.innerText); // does not support multiple digit operatoins
             if (cell.innerText == "=") {
-                displayText = "EQUALS "; 
-                operate([1,2,3,4], [5,6,7,8]); 
+                equals(); 
             }
             else {
                 displayText += cell.innerText + " "; 
@@ -59,10 +56,10 @@ function makeOperators(rows, cols) { // includes clear (AC)
         cell.innerText = operators[gridNum-1]; 
 
         cell.addEventListener('click', () => {
-            operatorsStack.push(cell.innerText);   
+            operatorsStack.push(cell.innerText); 
 
             if (cell.innerText == "AC") {
-                displayText = ""; 
+                clear(); 
             }
             else {
                 displayText += cell.innerText + " "; 
@@ -72,20 +69,33 @@ function makeOperators(rows, cols) { // includes clear (AC)
     }
 }
 
-function specialOperators() {
-    
+function clear() {
+    displayText = ""; 
+    operandsStack = [];
+    operatorsStack = []; 
 }
 
-function operate(operandsStack, operatorsStack) { 
+function equals() {
+    displayText = operate(); 
+}
+
+function operate() { // handles two numbers
+    console.log(operandsStack); 
     let num1 = operandsStack.shift(); 
     let num2 = operandsStack.shift(); 
-    let numOperator = operatorsStack.shift(); 
+    let numOperator; 
+    let operation; 
 
-    for (op in operatorsStack) {
-        if (numOperator == op) {
-            console.log(numOperators); 
-        }
+    let result = 0; 
+
+    console.log(operatorsStack); 
+
+    for (let operator of operatorsStack) {
+        console.log(operator);
+        operation = operations[operators.indexOf(operator)]; 
     }
+    console.log(num1); 
+    return operation(num1, num2); 
 }
 
 makeCalculator(); 
