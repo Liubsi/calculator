@@ -40,7 +40,7 @@ function makeBody(rows, cols) {
         cell.addEventListener('click', () => {
             if (cell.innerText == "=") {
                 consecDigits = false; 
-                operandsStack[1] = concatDigits("This shouldn't do anything"); 
+                operandsStack[operandsStack.length] = concatDigits("This shouldn't do anything"); 
                 equals(); 
             }
             else {
@@ -86,8 +86,15 @@ function clear() {
 }
 
 function equals() {
-    displayText = operate() + " ";
-    console.log(operandsStack); 
+    let bobo = 0;
+    while (operatorsStack.length > 1 || bobo < 10) {
+        displayText = operate() + " "; 
+        bobo++
+    }
+    
+    console.log("After");
+    console.log(operandsStack);
+    console.log(operatorsStack); 
 }
 
 function concatDigits(digit) {
@@ -100,7 +107,6 @@ function concatDigits(digit) {
             bigNumber += digits[i]; 
         }
         digits = []; 
-
         return bigNumber; 
     }
 }
@@ -116,12 +122,12 @@ function operate() { // handles two numbers MAX
     let firstOperation = operatorsStack.shift(); 
 
     let operation = mappedOperators[operators.indexOf(firstOperation)];
+    
     let result = operations[operation](num1, num2); 
 
     operandsStack.unshift(result); 
-
+    
     return result; 
 }
-
 
 makeCalculator(); 
