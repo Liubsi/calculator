@@ -112,6 +112,7 @@ function equals() {
 function determineOrder() { // enforce order of operations
     const order = [["/", "*"], ["+", "-"]];
     let executionOrder = 0; 
+    
 }
 
 function checkError() {
@@ -138,7 +139,10 @@ function concatDigits(digit) { // concatenates digits
 
 function operate() { // handles two numbers at a time
 
-    if (!operandsStack[0] || !operandsStack[1] || !operatorsStack[0]) {
+    if ((!operandsStack[0] && operandsStack[0] !== 0) || !operandsStack[1] || !operatorsStack[0]) { // accounts for '0' == '' 
+        console.log(operandsStack[0] !== '0');
+        console.log(operandsStack[0]); 
+        
         return displayText; 
     }
 
@@ -150,6 +154,7 @@ function operate() { // handles two numbers at a time
     let result = operations[operation](num1, num2); 
 
     operandsStack.unshift(result); 
+    console.log(num1 + " operation " + num2); 
 
     return result; 
 }
