@@ -138,14 +138,7 @@ function concatDigits(digit) { // concatenates digits
 }
 
 function operate() { // handles two numbers at a time
-
-    if ((!operandsStack[0] && operandsStack[0] !== 0) || !operandsStack[1] || !operatorsStack[0]) { // accounts for '0' == '' 
-        console.log(operandsStack[0] !== '0');
-        console.log(operandsStack[0]); 
-        
-        return displayText; 
-    }
-
+    
     let num1 = parseFloat(operandsStack.shift()); 
     let num2 = parseFloat(operandsStack.shift()); 
     let firstOperation = operatorsStack.shift(); 
@@ -154,7 +147,6 @@ function operate() { // handles two numbers at a time
     let result = operations[operation](num1, num2); 
 
     operandsStack.unshift(result); 
-    console.log(num1 + " operation " + num2); 
 
     return result; 
 }
