@@ -37,30 +37,32 @@ function makeBody(rows, cols) {
         numContainer.appendChild(cell).className = "num-items"; 
         cell.innerText = content[numGrid-1]; 
 
-        cell.addEventListener('click', () => {
-            if (cell.innerText == "=") {
-                consecDigits = false; 
-                resulted = true; 
-                // error checking 
-                if (digits.length != 0) {
-                    operandsStack[operandsStack.length] = concatDigits("This shouldn't do anything"); 
+        if (cell.innerText != "." && cell.innerText != "(" && cell.innerText != ")" && cell.innerText != "%") { // disable ( ) . %
+            cell.addEventListener('click', () => {
+                if (cell.innerText == "=") {
+                    consecDigits = false; 
+                    resulted = true; 
+                    // error checking 
+                    if (digits.length != 0) {
+                        operandsStack[operandsStack.length] = concatDigits("This shouldn't do anything"); 
+                    }
+                    if (!checkError()) {
+                        equals(); 
+                    }
                 }
-                if (!checkError()) {
-                    equals(); 
+                else {
+                    // if number entered after result is calculated 
+                    if (resulted) {
+                        clear(); 
+                    }
+                    consecDigits = true; 
+                    concatDigits(cell.innerText); 
+                    displayText += cell.innerText + ""; 
                 }
-            }
-            else {
-                // if number entered after result is calculated 
-                if (resulted) {
-                    clear(); 
-                }
-                consecDigits = true; 
-                concatDigits(cell.innerText); 
-                displayText += cell.innerText + ""; 
-            }
-            display.innerText = displayText; 
+                display.innerText = displayText; 
 
-        });
+            });
+        }   
     }
 }
 
@@ -117,7 +119,7 @@ function determineOrder() { // enforce order of operations
 
 function checkError() {
     if ((operandsStack.length - operatorsStack.length) != 1) {
-        console.log("Error"); 
+        displayText = "Error"; 
         return true; 
     }
     return false; 
@@ -138,10 +140,16 @@ function concatDigits(digit) { // concatenates digits
 }
 
 function operate() { // handles two numbers at a time
-    
+
     let num1 = parseFloat(operandsStack.shift()); 
     let num2 = parseFloat(operandsStack.shift()); 
     let firstOperation = operatorsStack.shift(); 
+
+    for (let i of operandsStack) {
+        if (i == num1) {
+
+        }
+    }
 
     let operation = mappedOperators[operators.indexOf(firstOperation)];
     let result = operations[operation](num1, num2); 
