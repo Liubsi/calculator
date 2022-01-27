@@ -105,16 +105,11 @@ function clear() {
 function equals() {
     console.log(operandsStack);
     console.log(operatorsStack); 
+    orderOperations();  
 
     while (operatorsStack.length > 0) {
         displayText = operate() + " "; 
     }
-}
-
-function determineOrder() { // enforce order of operations
-    const order = [["/", "*"], ["+", "-"]];
-    let executionOrder = 0; 
-    
 }
 
 function checkError() {
@@ -139,17 +134,49 @@ function concatDigits(digit) { // concatenates digits
     }
 }
 
+function orderOperations() {
+    let privilegedOperatorIndex = []; // numbers
+
+    for (let i = 0; i < operatorsStack.length; i++) {
+        if (operatorsStack[i] == "/" || operatorsStack[i] == "*") {
+            privilegedOperatorIndex.push(i);
+        }
+    }
+
+    for (let i of privilegedOperatorIndex) {
+        let num1 = parseFloat(operandsStack[i]); 
+        let num2 = parseFloat(operandsStack[i+1]); 
+        let currentOperation = operatorsStack[i]; 
+        
+        let privilegedOperation = mappedOperators[operators.indexOf(currentOperation)]; 
+        let result = operations[privilegedOperation](num1, num2); 
+        
+        operandsStack.splice(i, 2, result, "placeholder"); 
+    }
+
+    for (let i = 0; i < operandsStack.length; i++) {
+        if (operandsStack[i] === "placeholder") {
+            operandsStack.splice(i, 1); 
+        }
+    }
+
+    for (let i = 0; i < operatorsStack.length; i++) {
+        if (operatorsStack[i] == "/" || operatorsStack[i] == "*") {
+            operatorsStack.splice(i,1); 
+        }
+    }
+
+    console.log(operatorsStack); 
+    console.log(operandsStack); 
+}
+
+
 function operate() { // handles two numbers at a time
 
     let num1 = parseFloat(operandsStack.shift()); 
     let num2 = parseFloat(operandsStack.shift()); 
+    console.log(num1 + " " + num2); 
     let firstOperation = operatorsStack.shift(); 
-
-    for (let i of operandsStack) {
-        if (i == num1) {
-
-        }
-    }
 
     let operation = mappedOperators[operators.indexOf(firstOperation)];
     let result = operations[operation](num1, num2); 
