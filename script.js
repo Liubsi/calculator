@@ -137,7 +137,7 @@ function concatDigits(digit) { // concatenates digits
 function orderOperations() {
     let privilegedOperatorIndex = []; // numbers
 
-    for (let i = 0; i < operatorsStack.length; i++) {
+    for (let i = operatorsStack.length - 1; i >= 0; i--) {
         if (operatorsStack[i] == "/" || operatorsStack[i] == "*") {
             privilegedOperatorIndex.push(i);
         }
@@ -151,18 +151,21 @@ function orderOperations() {
         let privilegedOperation = mappedOperators[operators.indexOf(currentOperation)]; 
         let result = operations[privilegedOperation](num1, num2); 
         
-        operandsStack.splice(i, 2, result, "placeholder"); 
+        console.log(num1 + " " + num2);     
+        operandsStack.splice(i, 2, result); 
     }
 
-    for (let i = 0; i < operandsStack.length; i++) {
+    console.log(operandsStack); 
+
+    for (let i = operandsStack.length - 1; i >= 0; i--) {
         if (operandsStack[i] === "placeholder") {
             operandsStack.splice(i, 1); 
         }
     }
 
-    for (let i = 0; i < operatorsStack.length; i++) {
+    for (let i = operatorsStack.length - 1; i >= 0; i--) {
         if (operatorsStack[i] == "/" || operatorsStack[i] == "*") {
-            operatorsStack.splice(i,1); 
+            operatorsStack.splice(i,1);
         }
     }
 
